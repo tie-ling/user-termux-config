@@ -1,3 +1,6 @@
+# https://old.reddit.com/r/termux/comments/1k6k3se/how_use_termuxservices_and_sshagent_in_01182/mor8aet/
+export SSH_AUTH_SOCK="$PREFIX"/var/run/ssh-agent.socket
+
 # Use longer shell history
 export HISTFILESIZE=10000
 export HISTSIZE=10000
