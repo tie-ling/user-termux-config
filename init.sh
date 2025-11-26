@@ -35,8 +35,10 @@ mv ~/user-termux-config/.git ~/
 git reset --hard
 
 # set new remote
-git -C user-home-config remote rm origin
-git -C user-home-config remote add origin git@github.com:tie-ling/user-termux-config
+git -C ~ remote rm origin
+git -C ~ remote add origin git@github.com:tie-ling/user-termux-config
 
 # clone user-Projects
+ssh-add
+
 git clone git@github.com:tie-ling/user-projects Projects
