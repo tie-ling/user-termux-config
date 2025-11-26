@@ -1,5 +1,5 @@
 *~
-.termux/colors.properties
+
 .bash_history
 .cache
 .local
@@ -9,3 +9,4 @@ Projects
 
 .w3m/history
 .config/emacs/
+/.termux/font.ttf
