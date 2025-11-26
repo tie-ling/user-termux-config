@@ -1,0 +1,42 @@
+#!/bin/sh
+# choose a repo
+termux-change-repo
+
+# install git and openssh immediately
+# too hard on the eyes to run commands on small screeen
+
+pkg install git openssh openssh-sftp-server emacs termux-services w3m
+
+# now press C-d to exit and restart termux
+# this is needed for sv service manager to work
+
+# now enable ssh services
+sv-enable ssh-agent
+sv-enable sshd
+
+# aquire wakelock
+go to notification , termux, aquire wakelock
+
+# scan public key as qr code and paste:
+## qrencode -t ansiutf8 < .ssh/id_ed25519.pub
+
+nano .ssh/authorized_keys
+
+# see ip
+ifconfig
+
+## ssh -p 8022 user@192.168.1.85
+
+# clone home
+git clone https://github.com/tie-ling/user-termux-config
+
+# link config
+mv ~/user-termux-config/.git ~/
+git reset --hard
+
+# set new remote
+git -C user-home-config remote rm origin
+git -C user-home-config remote add origin git@github.com:tie-ling/user-termux-config
+
+# clone user-Projects
+git clone git@github.com:tie-ling/user-projects Projects
