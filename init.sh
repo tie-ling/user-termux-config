@@ -17,6 +17,10 @@ sv-enable sshd
 # aquire wakelock
 go to notification , termux, aquire wakelock
 
+# fix pager, or else w3m will be used
+pkg install less
+update-alternatives --all
+
 # scan public key as qr code and paste:
 ## qrencode -t ansiutf8 < .ssh/id_ed25519.pub
 
