@@ -45,4 +45,4 @@ git -C ~ remote add origin git@github.com:tie-ling/user-termux-config
 # clone user-Projects
 ssh-add
 
-git clone git@github.com:tie-ling/user-projects Projects
+git clone vps:~/Projects Projects
