@@ -22,6 +22,8 @@ e () {
     emacsclient --alternate-editor='' --create-frame  "${@}"
 }
 
+export EDITOR=
+
 gitpushall () {
     find ~ -maxdepth 2 -name '.git' -type d -print0 | xargs --verbose -0I{} git -C {}/.. push
 }

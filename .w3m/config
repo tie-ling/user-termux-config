@@ -79,7 +79,7 @@ tmp_dir
 mime_types ~/.mime.types, /data/data/com.termux/files/usr/etc/mime.types
 mailcap ~/.w3m/mailcap, /data/data/com.termux/files/usr/etc/w3m/mailcap
 urimethodmap ~/.w3m/urimethodmap, /data/data/com.termux/files/usr/etc/w3m/urimethodmap
-editor editor
+editor emacsclient --alternate-editor='' --create-frame
 mailto_options 1
 mailer 
 extbrowser termux-open-url
