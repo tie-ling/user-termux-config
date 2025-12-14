@@ -11,6 +11,7 @@
   (display-time-mode nil)
   (electric-pair-mode t)
   (enable-local-variables nil)
+  (global-visual-line-mode t)
   (indent-tabs-mode nil)
   (inhibit-startup-screen t)
   (mode-line-compact 'long)
@@ -29,7 +30,8 @@
   (xterm-mouse-mode nil))
 
 (use-package visual-fill
-  :ensure t)
+  :ensure t
+  :hook ((text-mode . visual-fill-mode)))
 
 (use-package adaptive-wrap
   :ensure t)
