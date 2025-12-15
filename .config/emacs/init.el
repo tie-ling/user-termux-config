@@ -36,6 +36,13 @@
 (use-package adaptive-wrap
   :ensure t)
 
+(use-package slob-dict
+  :load-path "lisp")
+
+(use-package text-mode
+  :bind
+  (("C-c d" . slob-dict-search)))
+
 (use-package savehist
   :init
   (savehist-mode))
