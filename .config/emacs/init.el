@@ -43,6 +43,13 @@
   :bind
   (("C-c d" . slob-dict-search)))
 
+(use-package ledger-mode
+  :ensure t
+  :custom
+  (ledger-report-use-strict t)
+  (ledger-default-date-format "%y-%m-%d")
+  :mode ("\\.ledger\\'"))
+
 (use-package savehist
   :init
   (savehist-mode))
