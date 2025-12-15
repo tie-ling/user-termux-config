@@ -46,3 +46,8 @@ git -C ~ remote add origin git@github.com:tie-ling/user-termux-config
 ssh-add
 
 git clone vps:~/Projects Projects
+
+# slob dict
+pkg install ledger python
+pip install git+https://github.com/itkach/slob.git
+# takes about two minutes to install
