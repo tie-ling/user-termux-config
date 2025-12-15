@@ -43,13 +43,6 @@
   :bind
   (("C-c d" . slob-dict-search)))
 
-(use-package ledger-mode
-  :ensure t
-  :custom
-  (ledger-report-use-strict t)
-  (ledger-default-date-format "%y-%m-%d")
-  :mode ("\\.ledger\\'"))
-
 (use-package savehist
   :init
   (savehist-mode))
@@ -92,7 +85,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages nil))
+ '(package-selected-packages '(adaptive-wrap ledger-mode magit vertico visual-fill)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
