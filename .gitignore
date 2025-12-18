@@ -11,3 +11,4 @@ Projects
 .config/emacs/
 /.termux/font.ttf
 .w3m/
+/.ssh/known_hosts.old
