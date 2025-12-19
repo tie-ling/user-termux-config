@@ -66,7 +66,7 @@
 
 (use-package ledger-mode
   :ensure t
-  :mode ("\\.ledger\\")
+  :mode ("\\.ledger\\'")
   :custom
   (ledger-report-use-strict t)
   (ledger-default-date-format "%y-%m-%d"))
