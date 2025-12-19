@@ -48,6 +48,12 @@ ssh-add
 git clone vps:~/Projects Projects
 
 # slob dict
-pkg install ledger python
+pkg install python
 pip install git+https://github.com/itkach/slob.git
 # takes about two minutes to install
+
+# fix emacs info manual not displaying
+pkg install texinfo
+find /data/data/com.termux/files/usr/share/info/ -type f -exec \
+install-info --dir-file=/data/data/com.termux/files/usr/share/info/dir \
+--info-file={} \;
