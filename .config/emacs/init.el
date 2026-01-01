@@ -36,7 +36,7 @@
   (tool-bar-mode t)
   (tool-bar-position 'bottom)
   (visible-bell t)
-  (xterm-mouse-mode nil))
+  (xterm-mouse-mode t))
 
 (use-package visual-fill
   :ensure t
