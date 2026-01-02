@@ -40,7 +40,8 @@
 
 (use-package visual-fill
   :ensure t
-  :hook ((text-mode . visual-fill-mode)))
+  :hook ((text-mode . visual-fill-mode)
+         (slob-dict-mode . visual-fill-mode)))
 
 (use-package adaptive-wrap
   :ensure t)
