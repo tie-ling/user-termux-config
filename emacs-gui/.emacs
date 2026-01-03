@@ -14,10 +14,10 @@
   (indent-tabs-mode nil)
   (inhibit-startup-screen t)
   (mode-line-compact 'long)
- (touch-screen-enable-hscroll nil)
- (tool-bar-button-margin 12)
+  (touch-screen-enable-hscroll nil)
+  (tool-bar-button-margin 12)
   (menu-bar-mode t)
-(face-font-family-alternatives
+  (face-font-family-alternatives
    '(("JuliaMono" "Noto Sans SC") ("Libertinus Serif" "Noto Serif SC")))
   (modus-themes-bold-constructs nil)
   (modus-themes-inhibit-reload nil)
@@ -40,6 +40,8 @@
   :ensure t)
 
 (use-package text-mode
+  :hook
+  ((text-mode . variable-pitch-mode))
   :bind
   (("C-c d" . dictionary-search)))
 
@@ -54,8 +56,9 @@
 
 (use-package shr
   :custom
- (shr-inhibit-images t)
- (shr-use-colors nil))
+  (shr-cookie-policy nil)
+  (shr-inhibit-images t)
+  (shr-use-colors nil))
 
 (custom-set-faces
  '(default ((t (:height 184 :family "JuliaMono"))))
@@ -67,3 +70,20 @@
   (dolist (f (font-family-list))
     (princ f)
     (princ "\n")))
+
+(use-package dictionary
+  :hook
+  ((dictionary-mode . variable-pitch-mode)
+   (text-mode . text-mode-tool-bar)
+   (dictionary-mode . text-mode-tool-bar))
+
+  :config
+  (defun text-mode-tool-bar (&rest _ignored)
+    "Set up tool bar for text mode"
+    (interactive)
+    (define-key menu-bar-goto-menu [scroll-up]
+                '(menu-item "Scroll up" scroll-up-command :help "Scroll up a full screen"))
+    (let ((map (make-sparse-keymap)))
+      (tool-bar-local-item-from-menu 'dictionary-lookup-definition "index" map dictionary-mode-map  :label "Look up word at point")
+      (tool-bar-local-item-from-menu 'scroll-up-command "save" map global-map  :label "Scroll up")
+      (setq-local secondary-tool-bar-map map))))
