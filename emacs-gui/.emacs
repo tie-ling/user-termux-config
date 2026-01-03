@@ -1,6 +1,9 @@
 ;;; -*- lexical-binding: t -*-
 
 (use-package emacs
+  :config
+  (global-set-key (kbd "<volume-down>") (kbd "<next>"))
+  (global-set-key (kbd "<volume-up>") (kbd "<prior>"))
   :custom
   (auto-fill-function 'do-auto-fill t)
   (calendar-week-start-day 1)
