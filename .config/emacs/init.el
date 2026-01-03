@@ -41,17 +41,14 @@
 (use-package visual-fill
   :ensure t
   :hook ((text-mode . visual-fill-mode)
-         (slob-dict-mode . visual-fill-mode)))
+         (dictionary-mode . visual-fill-mode)))
 
 (use-package adaptive-wrap
   :ensure t)
 
-(use-package slob-dict
-  :load-path "lisp")
-
 (use-package text-mode
   :bind
-  (("C-c d" . slob-dict-search)))
+  (("C-c d" . dictionary-search)))
 
 (use-package savehist
   :init
