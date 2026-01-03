@@ -47,7 +47,7 @@
 
 (use-package text-mode
   :bind
-  (("C-c d" . dictionary-search)))
+  (("C-c d" . dictionary-lookup-definition)))
 
 (use-package savehist
   :init
