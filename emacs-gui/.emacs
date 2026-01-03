@@ -89,4 +89,6 @@
     (let ((map (make-sparse-keymap)))
       (tool-bar-local-item-from-menu 'dictionary-lookup-definition "index" map dictionary-mode-map  :label "Look up word at point")
       (tool-bar-local-item-from-menu 'scroll-up-command "save" map global-map  :label "Scroll up")
+      (tool-bar-local-item-from-menu 'delete-other-windows "close" map
+  global-map  :label "Remove other windows")
       (setq-local secondary-tool-bar-map map))))
