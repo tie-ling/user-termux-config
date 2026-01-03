@@ -1,11 +1,13 @@
 #!/bin/sh
+# install termux, emacs gui from fdroid.
+
 # choose a repo
 termux-change-repo
 
 # install git and openssh immediately
 # too hard on the eyes to run commands on small screeen
 
-pkg install git openssh openssh-sftp-server emacs termux-services w3m
+pkg install git openssh openssh-sftp-server emacs termux-services w3m dictd
 
 # now press C-d to exit and restart termux
 # this is needed for sv service manager to work
@@ -46,11 +48,6 @@ git -C ~ remote add origin git@github.com:tie-ling/user-termux-config
 ssh-add
 
 git clone vps:~/Projects Projects
-
-# slob dict
-pkg install python
-pip install git+https://github.com/itkach/slob.git
-# takes about two minutes to install
 
 # fix emacs info manual not displaying
 pkg install texinfo

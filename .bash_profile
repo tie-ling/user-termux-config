@@ -5,6 +5,9 @@ export SSH_AUTH_SOCK="$PREFIX"/var/run/ssh-agent.socket
 export HISTFILESIZE=10000
 export HISTSIZE=10000
 
+rundictd () {
+    dictd --pid-file $PREFIX/var/run/dictd.pid -s -c ~/.config/dictd.conf --locale en_US.UTF-8
+}
 
 # save timestamp (unix epoch) in history file
 export HISTTIMEFORMAT="%m-%dT%H:%M "
