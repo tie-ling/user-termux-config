@@ -55,3 +55,4 @@ mkdir -p $PREFIX/var/service/dictd/log
 ln -sf $PREFIX/share/termux-services/svlogger $PREFIX/var/service/dictd/log/run
 cp .config/dictd.service $PREFIX/var/service/dictd/run
 sv up dictd
+sv enable dictd

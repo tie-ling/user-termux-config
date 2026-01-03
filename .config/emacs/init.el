@@ -40,8 +40,7 @@
 
 (use-package visual-fill
   :ensure t
-  :hook ((text-mode . visual-fill-mode)
-         (dictionary-mode . visual-fill-mode)))
+  :hook ((text-mode . visual-fill-mode)))
 
 (use-package adaptive-wrap
   :ensure t)
@@ -99,8 +98,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(adaptive-wrap ledger ledger-mode magit vertico visual-fill)))
+ '(package-selected-packages nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
