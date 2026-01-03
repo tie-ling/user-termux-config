@@ -49,8 +49,9 @@ ssh-add
 
 git clone vps:~/Projects Projects
 
-# fix emacs info manual not displaying
-pkg install texinfo
-find /data/data/com.termux/files/usr/share/info/ -type f -exec \
-install-info --dir-file=/data/data/com.termux/files/usr/share/info/dir \
---info-file={} \;
+# enable dictd service
+mkdir -p $PREFIX/var/service/dictd/log
+
+ln -sf $PREFIX/share/termux-services/svlogger $PREFIX/var/service/dictd/log/run
+cp .config/dictd.service $PREFIX/var/service/dictd/run
+sv up dictd
