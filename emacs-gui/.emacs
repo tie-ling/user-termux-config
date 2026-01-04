@@ -99,3 +99,88 @@
       (tool-bar-local-item-from-menu 'delete-other-windows "close" map
   global-map  :label "Remove other windows")
       (setq-local secondary-tool-bar-map map))))
+
+
+(defun yc-touch-screen-handle-scroll (dx dy)
+  "Scroll the display assuming that a touch point has moved by DX and DY.
+Perform vertical scrolling by DY, using `pixel-scroll-precision'
+if `touch-screen-precision-scroll' is enabled.  Next, perform
+horizontal scrolling according to the movement in DX."
+  ;; Perform vertical scrolling first.  Do not ding at buffer limits.
+  ;; Show a message instead.
+  (condition-case nil
+      (if touch-screen-precision-scroll
+          (progn
+            (if (> dy 0)
+                (pixel-scroll-precision-scroll-down-page dy)
+              (pixel-scroll-precision-scroll-up-page (- dy)))
+            ;; Now set `lines-vscrolled' to an value that will result
+            ;; in hscroll being disabled if dy looks as if a
+            ;; significant amount of scrolling is about to take
+            ;; Otherwise, horizontal scrolling may then interfere with
+            ;; precision scrolling.
+            (when (> (abs dy) 10)
+              (setcar (nthcdr 7 touch-screen-current-tool) 10)))
+        ;; Start conventional scrolling.  First, determine the
+        ;; direction in which the scrolling is taking place.  Load the
+        ;; accumulator value.
+        (let ((accumulator (or (nth 5 touch-screen-current-tool) 0))
+              (window (cadr touch-screen-current-tool))
+              (lines-vscrolled (or (nth 7 touch-screen-current-tool) 0)))
+          (setq accumulator (+ accumulator dy)) ; Add dy.
+          ;; Figure out how much it has scrolled and how much remains
+          ;; on the top or bottom of the window.
+          (while (catch 'again
+                   (let* ((line-height (window-default-line-height window)))
+                     (if (and (< accumulator 0)
+                              (>= (- accumulator) line-height))
+                         (progn
+                           (setq accumulator (+ accumulator line-height))
+                           (scroll-down-command)
+                           (setq lines-vscrolled (1+ lines-vscrolled))
+                           (when (not (zerop accumulator))
+                             ;; If there is still an outstanding
+                             ;; amount to scroll, do this again.
+                             (throw 'again t)))
+                       (when (and (> accumulator 0)
+                                  (>= accumulator line-height))
+                         (setq accumulator (- accumulator line-height))
+                         (scroll-up-command)
+                         (setq lines-vscrolled (1+ lines-vscrolled))
+                         (when (not (zerop accumulator))
+                           ;; If there is still an outstanding amount
+                           ;; to scroll, do this again.
+                           (throw 'again t)))))
+                   ;; Scrolling is done.  Move the accumulator back to
+                   ;; touch-screen-current-tool and break out of the
+                   ;; loop.
+                   (setcar (nthcdr 5 touch-screen-current-tool) accumulator)
+                   (setcar (nthcdr 7 touch-screen-current-tool)
+                           lines-vscrolled)
+                   nil))))
+    (beginning-of-buffer
+     (message (error-message-string '(beginning-of-buffer))))
+    (end-of-buffer
+     (message (error-message-string '(end-of-buffer))))))
+
+
+(defun yc-touch-screen-scroll (event)
+  "Scroll the window within EVENT, a `touchscreen-scroll' event.
+If `touch-screen-precision-scroll', scroll the window vertically
+by the number of pixels specified within that event.  Else,
+scroll the window by one line for every
+`window-default-line-height' pixels worth of movement.
+
+If EVENT also specifies horizontal motion and no significant
+amount of vertical scrolling has taken place, also scroll the
+window horizontally in conjunction with the number of pixels in
+the event."
+  (interactive "e")
+  (let ((window (nth 1 event))
+        (dx (nth 2 event))
+        (dy (nth 3 event)))
+    (with-selected-window window
+      (yc-touch-screen-handle-scroll  (/ dx 3) (/ dy 3)))))
+
+; redefine touch scrolling to scroll-up/down
+(global-set-key [touchscreen-scroll] #'yc-touch-screen-scroll)
