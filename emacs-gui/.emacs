@@ -18,7 +18,7 @@
   (inhibit-startup-screen t)
   (mode-line-compact 'long)
   (touch-screen-enable-hscroll nil)
-  (tool-bar-button-margin 12)
+  (tool-bar-button-margin 18)
   (menu-bar-mode t)
   (face-font-family-alternatives
    '(("JuliaMono" "Noto Sans SC") ("Libertinus Serif" "Noto Serif SC")))
@@ -68,9 +68,9 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:height 184 :family "JuliaMono"))))
+ '(default ((t (:height 200 :family "JuliaMono"))))
  '(menu ((t (:family "Libertinus Serif"))))
- '(variable-pitch ((t (:family "Libertinus Serif" :height 230)))))
+ '(variable-pitch ((t (:family "Libertinus Serif" :height 250)))))
 
 (defun android-font-list ()
   "list all available fonts"
