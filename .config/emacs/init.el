@@ -40,6 +40,7 @@
 
 (use-package dictionary
   :custom
+  (dictionary-default-strategy "re")
   (dictionary-use-single-buffer t))
 
 (use-package visual-fill

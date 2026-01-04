@@ -81,6 +81,7 @@
 (use-package dictionary
   :custom
   (dictionary-use-single-buffer t)
+  (dictionary-default-strategy "re")
   :hook
   ((dictionary-mode . variable-pitch-mode)
    (text-mode . text-mode-tool-bar)
