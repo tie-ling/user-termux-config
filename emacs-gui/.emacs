@@ -64,6 +64,10 @@
   (shr-use-colors nil))
 
 (custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  '(default ((t (:height 184 :family "JuliaMono"))))
  '(menu ((t (:family "Libertinus Serif"))))
  '(variable-pitch ((t (:family "Libertinus Serif" :height 230)))))
@@ -75,6 +79,8 @@
     (princ "\n")))
 
 (use-package dictionary
+  :custom
+  (dictionary-use-single-buffer t)
   :hook
   ((dictionary-mode . variable-pitch-mode)
    (text-mode . text-mode-tool-bar)

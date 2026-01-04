@@ -38,6 +38,10 @@
   (visible-bell t)
   (xterm-mouse-mode t))
 
+(use-package dictionary
+  :custom
+  (dictionary-use-single-buffer t))
+
 (use-package visual-fill
   :ensure t
   :hook ((text-mode . visual-fill-mode)))
