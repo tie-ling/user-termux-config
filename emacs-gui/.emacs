@@ -1,5 +1,5 @@
 ;;; -*- lexical-binding: t -*-
-
+(server-start)
 (use-package emacs
   :config
   (global-set-key (kbd "<volume-down>") (kbd "<next>"))
