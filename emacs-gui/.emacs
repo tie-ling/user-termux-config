@@ -180,7 +180,7 @@ the event."
         (dx (nth 2 event))
         (dy (nth 3 event)))
     (with-selected-window window
-      (yc-touch-screen-handle-scroll  (/ dx 3) (/ dy 3)))))
+      (yc-touch-screen-handle-scroll  (/ dx 4) (/ dy 4)))))
 
 ; redefine touch scrolling to scroll-up/down
 (global-set-key [touchscreen-scroll] #'yc-touch-screen-scroll)
