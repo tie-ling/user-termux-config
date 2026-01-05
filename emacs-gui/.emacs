@@ -196,8 +196,11 @@ the event."
 
 ; redefine touch scrolling to scroll-up/down
 (global-set-key [touchscreen-scroll] #'yc-touch-screen-scroll)
-(define-key menu-bar-options-menu [toggle-view-mode] (menu-bar-make-mm-toggle
+(define-key menu-bar-options-menu [view-mode] (menu-bar-make-mm-toggle
        view-mode
        "Toggle view mode"
        "Make text read only"))
-       
+(define-key menu-bar-options-menu [toggle-frame-fullscreen] (menu-bar-make-mm-toggle
+       toggle-frame-fullscreen
+       "Toggle fullscreen"
+       "Make frame fullscreen"))
