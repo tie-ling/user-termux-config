@@ -39,6 +39,17 @@
   (xterm-mouse-mode t))
 
 (use-package dictionary
+  :config
+  (defun yc-dictionary-lookup-definition ()
+    "With DictD Capitalisation Fix. Unconditionally lookup the word at point."
+    (interactive)
+    (setq-local case-fold-search nil)
+    (let* ((cword (current-word))
+          (word  (if (string-match-p "^[A-ZÄÜÖ]" cword) (concat "9" cword) cword)))
+      (unless word
+        (user-error "No word at point"))
+      (dictionary-new-search (cons word dictionary-default-dictionary)))
+    (setq-local case-fold-search t))
   :custom
   (dictionary-default-strategy "re")
   (dictionary-use-single-buffer t))
@@ -52,7 +63,7 @@
 
 (use-package text-mode
   :bind
-  (("C-c d" . dictionary-lookup-definition)))
+  (("C-c d" . yc-dictionary-lookup-definition)))
 
 (use-package savehist
   :init
