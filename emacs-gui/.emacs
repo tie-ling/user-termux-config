@@ -80,7 +80,7 @@
 
 (use-package dictionary
   :config
-  (defun yc-yc-dictionary-lookup-definition ()
+  (defun yc-dictionary-lookup-definition ()
     "With DictD Capitalisation Fix. Unconditionally lookup the word at point."
     (interactive)
     (setq-local case-fold-search nil)
