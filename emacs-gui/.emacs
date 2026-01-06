@@ -204,3 +204,12 @@ the event."
        toggle-frame-fullscreen
        "Toggle fullscreen"
        "Make frame fullscreen"))
+
+(use-package desktop
+  :custom
+  (desktop-save-mode t)
+  (desktop-save t))
+
+(use-package saveplace
+  :custom
+  (save-place-mode t))
