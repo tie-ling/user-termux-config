@@ -208,7 +208,8 @@ the event."
 (use-package desktop
   :custom
   (desktop-save-mode t)
-  (desktop-save t))
+  (desktop-save t)
+  (desktop-dirname (expand-file-name "~")))
 
 (use-package saveplace
   :custom
