@@ -85,11 +85,12 @@
     (interactive)
     (setq-local case-fold-search nil)
     (let* ((cword (current-word nil t))
-          (word  (if (string-match-p "^[A-ZÄÜÖ]" cword) (concat "9" cword) cword)))
+          (word  (if (string-match-p "^[A-ZÄÜÖ]" cword) (concat "9"
+                                                                cword) cword)))
+      (setq-local case-fold-search t)
       (unless word
         (user-error "No word at point"))
-      (dictionary-new-search (cons word dictionary-default-dictionary)))
-    (setq-local case-fold-search t))
+      (dictionary-new-search (cons word dictionary-default-dictionary))))
   :custom
   (dictionary-use-single-buffer t)
   (dictionary-default-strategy "re")
