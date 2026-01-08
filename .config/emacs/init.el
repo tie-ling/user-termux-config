@@ -43,13 +43,12 @@
   (defun yc-dictionary-lookup-definition ()
     "With DictD Capitalisation Fix. Unconditionally lookup the word at point."
     (interactive)
-    (setq-local case-fold-search nil)
-    (let* ((cword (current-word nil t))
-          (word  (if (string-match-p "^[A-ZÄÜÖ]" cword) (concat "9" cword) cword)))
+    (let* ((case-fold-search nil)
+           (cword (current-word nil t))
+           (word  (if (string-match-p "^[A-ZÄÜÖ]" cword) (concat "9" cword) cword)))
       (unless word
         (user-error "No word at point"))
-      (dictionary-new-search (cons word dictionary-default-dictionary)))
-    (setq-local case-fold-search t))
+      (dictionary-new-search (cons word dictionary-default-dictionary))))
   :custom
   (dictionary-default-strategy "re")
   (dictionary-use-single-buffer t))
