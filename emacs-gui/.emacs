@@ -147,7 +147,7 @@ horizontal scrolling according to the movement in DX."
                               (>= (- accumulator) line-height))
                          (progn
                            (setq accumulator (+ accumulator line-height))
-                           (scroll-down-command)
+                           (execute-kbd-macro (kbd "<prior>"))
                            (setq lines-vscrolled (1+ lines-vscrolled))
                            (when (not (zerop accumulator))
                              ;; If there is still an outstanding
@@ -156,7 +156,8 @@ horizontal scrolling according to the movement in DX."
                        (when (and (> accumulator 0)
                                   (>= accumulator line-height))
                          (setq accumulator (- accumulator line-height))
-                         (scroll-up-command)
+                         (execute-kbd-macro (kbd "<next>"))
+
                          (setq lines-vscrolled (1+ lines-vscrolled))
                          (when (not (zerop accumulator))
                            ;; If there is still an outstanding amount
