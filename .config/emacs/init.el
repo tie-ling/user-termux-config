@@ -1,17 +1,11 @@
-;; -*- lexical-binding: t; -*-
-
-(require 'package)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-;; Comment/uncomment this line to enable MELPA Stable if desired.
-;; See `package-archive-priorities` and `package-pinned-packages`.
-;; Most users will not need or want to do this.
-;; (add-to-list 'package-archives
-;;              '("melpa-stable" . "https://stable.melpa.org/packages/") t)
-(package-initialize)
+;;; -*- lexical-binding: t -*-
+(server-start)
 
 (use-package emacs
+  :config
+  (global-set-key (kbd "<volume-down>") (kbd "<next>"))
+  (global-set-key (kbd "<volume-up>") (kbd "<prior>"))
   :custom
-  (menu-bar-mode nil)
   (auto-fill-function 'do-auto-fill t)
   (calendar-week-start-day 1)
   (completion-ignore-case t)
@@ -24,6 +18,11 @@
   (indent-tabs-mode nil)
   (inhibit-startup-screen t)
   (mode-line-compact 'long)
+  (touch-screen-enable-hscroll nil)
+  (tool-bar-button-margin 18)
+  (menu-bar-mode t)
+  (face-font-family-alternatives
+   '(("JuliaMono" "Noto Sans SC") ("Libertinus Serif" "Noto Serif SC")))
   (modus-themes-bold-constructs nil)
   (modus-themes-inhibit-reload nil)
   (modus-themes-italic-constructs t)
@@ -35,8 +34,50 @@
   (tab-always-indent 'complete)
   (tool-bar-mode t)
   (tool-bar-position 'bottom)
-  (visible-bell t)
-  (xterm-mouse-mode t))
+  (visible-bell t))
+
+(use-package visual-fill
+  :ensure t
+  :hook ((text-mode . visual-fill-mode)))
+
+(use-package adaptive-wrap
+  :ensure t)
+
+(use-package text-mode
+  :hook
+  ((text-mode . variable-pitch-mode))
+  :bind
+  (("C-c d" . dictionary-search)))
+
+(use-package savehist
+  :init
+  (savehist-mode))
+
+(use-package vertico
+  :ensure t
+  :custom
+  (vertico-mode t))
+
+(use-package shr
+  :custom
+  (shr-cookie-policy nil)
+  (shr-inhibit-images t)
+  (shr-use-colors nil))
+
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(default ((t (:height 200 :family "JuliaMono"))))
+ '(menu ((t (:family "Libertinus Serif"))))
+ '(variable-pitch ((t (:family "Libertinus Serif" :height 250)))))
+
+(defun android-font-list ()
+  "list all available fonts"
+  (dolist (f (font-family-list))
+    (princ f)
+    (princ "\n")))
 
 (use-package dictionary
   :config
@@ -50,73 +91,125 @@
         (user-error "No word at point"))
       (dictionary-new-search (cons word dictionary-default-dictionary))))
   :custom
+  (dictionary-use-single-buffer t)
   (dictionary-default-strategy "re")
-  (dictionary-use-single-buffer t))
+  :hook
+  ((dictionary-mode . variable-pitch-mode)
+   (text-mode . text-mode-tool-bar)
+   (dictionary-mode . text-mode-tool-bar))
 
-(use-package visual-fill
-  :ensure t
-  :hook ((text-mode . visual-fill-mode)))
+  :config
+  (defun text-mode-tool-bar (&rest _ignored)
+    "Set up tool bar for text mode"
+    (interactive)
+    (define-key menu-bar-goto-menu [scroll-up]
+                '(menu-item "Scroll up" scroll-up-command :help "Scroll up a full screen"))
+    (define-key menu-bar-tools-menu [dictionary]
+                '(menu-item "Dictionary" yc-dictionary-lookup-definition :help "Look up word at point"))
+    (let ((map (make-sparse-keymap)))
+      (tool-bar-local-item-from-menu 'yc-dictionary-lookup-definition "index" map global-map  :label "Look up word at point")
+      (tool-bar-local-item-from-menu 'scroll-up-command "save" map global-map  :label "Scroll up")
+      (tool-bar-local-item-from-menu 'delete-other-windows "close" map global-map  :label "Remove other windows")
+      (setq-local secondary-tool-bar-map map))))
 
-(use-package adaptive-wrap
-  :ensure t)
 
-(use-package text-mode
-  :bind
-  (("C-c d" . yc-dictionary-lookup-definition)))
+(defun yc-touch-screen-handle-scroll (dx dy)
+  "Scroll the display assuming that a touch point has moved by DX and DY.
+Perform vertical scrolling by DY, using `pixel-scroll-precision'
+if `touch-screen-precision-scroll' is enabled.  Next, perform
+horizontal scrolling according to the movement in DX."
+  ;; Perform vertical scrolling first.  Do not ding at buffer limits.
+  ;; Show a message instead.
+  (condition-case nil
+      (if touch-screen-precision-scroll
+          (progn
+            (if (> dy 0)
+                (pixel-scroll-precision-scroll-down-page dy)
+              (pixel-scroll-precision-scroll-up-page (- dy)))
+            ;; Now set `lines-vscrolled' to an value that will result
+            ;; in hscroll being disabled if dy looks as if a
+            ;; significant amount of scrolling is about to take
+            ;; Otherwise, horizontal scrolling may then interfere with
+            ;; precision scrolling.
+            (when (> (abs dy) 10)
+              (setcar (nthcdr 7 touch-screen-current-tool) 10)))
+        ;; Start conventional scrolling.  First, determine the
+        ;; direction in which the scrolling is taking place.  Load the
+        ;; accumulator value.
+        (let ((accumulator (or (nth 5 touch-screen-current-tool) 0))
+              (window (cadr touch-screen-current-tool))
+              (lines-vscrolled (or (nth 7 touch-screen-current-tool) 0)))
+          (setq accumulator (+ accumulator dy)) ; Add dy.
+          ;; Figure out how much it has scrolled and how much remains
+          ;; on the top or bottom of the window.
+          (while (catch 'again
+                   (let* ((line-height (window-default-line-height window)))
+                     (if (and (< accumulator 0)
+                              (>= (- accumulator) line-height))
+                         (progn
+                           (setq accumulator (+ accumulator line-height))
+                           (execute-kbd-macro (kbd "<prior>"))
+                           (setq lines-vscrolled (1+ lines-vscrolled))
+                           (when (not (zerop accumulator))
+                             ;; If there is still an outstanding
+                             ;; amount to scroll, do this again.
+                             (throw 'again t)))
+                       (when (and (> accumulator 0)
+                                  (>= accumulator line-height))
+                         (setq accumulator (- accumulator line-height))
+                         (execute-kbd-macro (kbd "<next>"))
 
-(use-package savehist
-  :init
-  (savehist-mode))
+                         (setq lines-vscrolled (1+ lines-vscrolled))
+                         (when (not (zerop accumulator))
+                           ;; If there is still an outstanding amount
+                           ;; to scroll, do this again.
+                           (throw 'again t)))))
+                   ;; Scrolling is done.  Move the accumulator back to
+                   ;; touch-screen-current-tool and break out of the
+                   ;; loop.
+                   (setcar (nthcdr 5 touch-screen-current-tool) accumulator)
+                   (setcar (nthcdr 7 touch-screen-current-tool)
+                           lines-vscrolled)
+                   nil))))
+    (beginning-of-buffer
+     (message (error-message-string '(beginning-of-buffer))))
+    (end-of-buffer
+     (message (error-message-string '(end-of-buffer))))))
 
-(use-package vertico
-  :ensure t
+
+(defun yc-touch-screen-scroll (event)
+  "Scroll the window within EVENT, a `touchscreen-scroll' event.
+If `touch-screen-precision-scroll', scroll the window vertically
+by the number of pixels specified within that event.  Else,
+scroll the window by one line for every
+`window-default-line-height' pixels worth of movement.
+
+If EVENT also specifies horizontal motion and no significant
+amount of vertical scrolling has taken place, also scroll the
+window horizontally in conjunction with the number of pixels in
+the event."
+  (interactive "e")
+  (let ((window (nth 1 event))
+        (dx (nth 2 event))
+        (dy (nth 3 event)))
+    (with-selected-window window
+      (yc-touch-screen-handle-scroll  (/ dx 4) (/ dy 4)))))
+
+
+; redefine touch scrolling to scroll-up/down
+(global-set-key [touchscreen-scroll] #'yc-touch-screen-scroll)
+
+(define-key menu-bar-options-menu [view-mode]
+            (menu-bar-make-mm-toggle view-mode "Toggle view mode" "Make text read only"))
+(define-key menu-bar-options-menu [toggle-frame-fullscreen]
+            (menu-bar-make-mm-toggle toggle-frame-fullscreen "Toggle fullscreen" "Make frame fullscreen"))
+
+(use-package desktop
   :custom
-  (vertico-mode t))
+  (desktop-save-mode t)
+  (desktop-save t)
+  (desktop-dirname (expand-file-name "~")))
 
-(use-package magit
-  :ensure t)
-
-(use-package ledger-mode
-  :ensure t
-  :mode ("\\.ledger\\'")
+(use-package saveplace
   :custom
-  (ledger-report-use-strict t)
-  (ledger-default-date-format "%y-%m-%d"))
-
-(use-package org
-  :bind
-  (("C-c a" . org-agenda)
-   ("C-c r" . org-shiftright)
-   ("C-c l" . org-store-link))
-  :custom
-  (org-agenda-inhibit-startup t)
-  (org-agenda-window-setup 'current-window)
-  (org-agenda-start-with-log-mode nil)
-  (org-clock-mode-line-total 'current)
-  (org-agenda-prefix-format
-   '((agenda . " %i %?-12t% s")
-     (todo . " %i %-12:c")
-     (tags . " %i %-12:c")
-     (search . " %i %-12:c")))
-  (org-agenda-files
-   "~/Projects/org/agenda-file-list.txt")
-  (org-directory "~/Projects/org")
-  (org-agenda-span 'day)
-  (org-display-custom-times nil)
-  (org-time-stamp-custom-formats '("%m-%d" . "%H:%M"))
-  (org-export-initial-scope 'buffer)
-  (org-export-backends '(ascii beamer html icalendar latex md odt))
-  (org-modules
-   '(ol-bbdb ol-bibtex ol-doi ol-eww ol-info ol-irc ol-mhe ol-rmail org-tempo)))
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages nil))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+  (save-place-mode t))

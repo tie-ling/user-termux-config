@@ -7,7 +7,7 @@ termux-change-repo
 # install git and openssh immediately
 # too hard on the eyes to run commands on small screeen
 
-pkg install git openssh openssh-sftp-server emacs termux-services w3m dictd
+pkg install git openssh termux-services w3m dictd mg
 
 # now press C-d to exit and restart termux
 # this is needed for sv service manager to work
@@ -39,6 +39,7 @@ git clone https://github.com/tie-ling/user-termux-config
 # link config
 mv ~/user-termux-config/.git ~/
 git reset --hard
+ln -s /data/data/com.termux/files/.config/emacs /data/data/org.gnu.emacs/files/.emacs.d 
 
 # set new remote
 git -C ~ remote rm origin
