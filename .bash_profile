@@ -22,7 +22,7 @@ set -o noclobber
 if ! [ -e $HOME/.w3m/history ]; then touch $HOME/.w3m/history; fi
 
 e () {
-  mg
+  mg "$@" 
 }
 
 export EDITOR=mg

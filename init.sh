@@ -4,6 +4,8 @@
 # choose a repo
 termux-change-repo
 
+termux-setup-storage
+
 # install git and openssh immediately
 # too hard on the eyes to run commands on small screeen
 
