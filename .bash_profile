@@ -22,10 +22,10 @@ set -o noclobber
 if ! [ -e $HOME/.w3m/history ]; then touch $HOME/.w3m/history; fi
 
 e () {
-    emacsclient --alternate-editor='' --create-frame  "${@}"
+  mg
 }
 
-export EDITOR=
+export EDITOR=mg
 
 gitpushall () {
     find ~ -maxdepth 2 -name '.git' -type d -print0 | xargs --verbose -0I{} git -C {}/.. push

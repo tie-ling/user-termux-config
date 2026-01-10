@@ -40,6 +40,7 @@ git clone https://github.com/tie-ling/user-termux-config
 mv ~/user-termux-config/.git ~/
 git reset --hard
 ln -s /data/data/com.termux/files/home/.config/emacs /data/data/org.gnu.emacs/files/.emacs.d 
+ln -s /data/data/com.termux/files/home /data/data/org.gnu.emacs/files/termux
 
 # set new remote
 git -C ~ remote rm origin
