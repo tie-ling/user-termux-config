@@ -91,7 +91,7 @@
     (princ "\n")))
 
 (use-package dictionary
-  :config
+  :init
   (defun yc-dictionary-lookup-definition (&rest _ignored)
     "With DictD Capitalisation Fix. Unconditionally lookup the word at point."
     (interactive)
