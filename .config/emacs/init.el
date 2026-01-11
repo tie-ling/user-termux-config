@@ -45,10 +45,10 @@
 
 (use-package text-mode
   :hook
-  ((text-mode . variable-pitch-mode))
-  :bind
-  (("C-c d" . dictionary-search)
+  ((text-mode . variable-pitch-mode)
    (text-mode . text-mode-tool-bar))
+  :bind
+  (("C-c d" . dictionary-search))
   :config
   (defun text-mode-tool-bar (&rest _ignored)
     "Set up tool bar for text mode"
