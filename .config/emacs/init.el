@@ -56,6 +56,7 @@
     (define-key text-mode-menu [dictionary]
                 '(menu-item "Dictionary" yc-dictionary-lookup-definition :help "Look up word at point"))
     (let ((map (make-sparse-keymap)))
+      ;; toolbar icon at https://cgit.git.savannah.gnu.org/cgit/emacs.git/tree/etc/images
       (tool-bar-local-item-from-menu 'yc-dictionary-lookup-definition "index" map text-mode-map  :label "Look up word at point")
       (tool-bar-local-item-from-menu 'delete-other-windows "close" map global-map  :label "Remove other windows")
       (setq-local secondary-tool-bar-map map))))
