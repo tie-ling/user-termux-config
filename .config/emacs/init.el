@@ -47,7 +47,18 @@
   :hook
   ((text-mode . variable-pitch-mode))
   :bind
-  (("C-c d" . dictionary-search)))
+  (("C-c d" . dictionary-search)
+   (text-mode . text-mode-tool-bar))
+  :config
+  (defun text-mode-tool-bar (&rest _ignored)
+    "Set up tool bar for text mode"
+    (interactive)
+    (define-key text-mode-menu [dictionary]
+                '(menu-item "Dictionary" yc-dictionary-lookup-definition :help "Look up word at point"))
+    (let ((map (make-sparse-keymap)))
+      (tool-bar-local-item-from-menu 'yc-dictionary-lookup-definition "index" map global-map  :label "Look up word at point")
+      (tool-bar-local-item-from-menu 'delete-other-windows "close" map global-map  :label "Remove other windows")
+      (setq-local secondary-tool-bar-map map)))))
 
 (use-package savehist
   :init
@@ -95,22 +106,8 @@
   (dictionary-default-strategy "re")
   :hook
   ((dictionary-mode . variable-pitch-mode)
-   (text-mode . text-mode-tool-bar)
-   (dictionary-mode . text-mode-tool-bar))
+   (dictionary-mode . text-mode-tool-bar)))
 
-  :config
-  (defun text-mode-tool-bar (&rest _ignored)
-    "Set up tool bar for text mode"
-    (interactive)
-    (define-key menu-bar-goto-menu [scroll-up]
-                '(menu-item "Scroll up" scroll-up-command :help "Scroll up a full screen"))
-    (define-key menu-bar-tools-menu [dictionary]
-                '(menu-item "Dictionary" yc-dictionary-lookup-definition :help "Look up word at point"))
-    (let ((map (make-sparse-keymap)))
-      (tool-bar-local-item-from-menu 'yc-dictionary-lookup-definition "index" map global-map  :label "Look up word at point")
-      (tool-bar-local-item-from-menu 'scroll-up-command "save" map global-map  :label "Scroll up")
-      (tool-bar-local-item-from-menu 'delete-other-windows "close" map global-map  :label "Remove other windows")
-      (setq-local secondary-tool-bar-map map))))
 
 
 (defun yc-touch-screen-handle-scroll (dx dy)
@@ -199,10 +196,11 @@ the event."
 ; redefine touch scrolling to scroll-up/down
 (global-set-key [touchscreen-scroll] #'yc-touch-screen-scroll)
 
+
 (define-key menu-bar-options-menu [view-mode]
-            (menu-bar-make-mm-toggle view-mode "Toggle view mode" "Make text read only"))
-(define-key menu-bar-options-menu [toggle-frame-fullscreen]
-            (menu-bar-make-mm-toggle toggle-frame-fullscreen "Toggle fullscreen" "Make frame fullscreen"))
+  '(menu-item "View Mode" view-mode :enable t))
+(define-key menu-bar-options-menu [fullscreen]
+  '(menu-item "Toggle fullscreen" toggle-frame-fullscreen :enable t))
 
 (use-package desktop
   :custom
@@ -213,9 +211,3 @@ the event."
 (use-package saveplace
   :custom
   (save-place-mode t))
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages nil))
