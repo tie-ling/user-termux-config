@@ -90,17 +90,17 @@
     (princ f)
     (princ "\n")))
 
+(defun yc-dictionary-lookup-definition (&rest _ignored)
+  "With DictD Capitalisation Fix. Unconditionally lookup the word at point."
+  (interactive)
+  (let* ((case-fold-search nil)
+         (cword (current-word nil t))
+         (word  (if (string-match-p "^[A-ZÄÜÖ]" cword) (concat "9" cword) cword)))
+    (unless word
+      (user-error "No word at point"))
+    (dictionary-new-search (cons word dictionary-default-dictionary))))
+
 (use-package dictionary
-  :init
-  (defun yc-dictionary-lookup-definition (&rest _ignored)
-    "With DictD Capitalisation Fix. Unconditionally lookup the word at point."
-    (interactive)
-    (let* ((case-fold-search nil)
-           (cword (current-word nil t))
-           (word  (if (string-match-p "^[A-ZÄÜÖ]" cword) (concat "9" cword) cword)))
-      (unless word
-        (user-error "No word at point"))
-      (dictionary-new-search (cons word dictionary-default-dictionary))))
   :custom
   (dictionary-use-single-buffer t)
   (dictionary-default-strategy "re")
