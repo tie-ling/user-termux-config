@@ -58,7 +58,7 @@
     (let ((map (make-sparse-keymap)))
       (tool-bar-local-item-from-menu 'yc-dictionary-lookup-definition "index" map global-map  :label "Look up word at point")
       (tool-bar-local-item-from-menu 'delete-other-windows "close" map global-map  :label "Remove other windows")
-      (setq-local secondary-tool-bar-map map)))))
+      (setq-local secondary-tool-bar-map map))))
 
 (use-package savehist
   :init
@@ -193,14 +193,14 @@ the event."
       (yc-touch-screen-handle-scroll  (/ dx 4) (/ dy 4)))))
 
 
-; redefine touch scrolling to scroll-up/down
+                                        ; redefine touch scrolling to scroll-up/down
 (global-set-key [touchscreen-scroll] #'yc-touch-screen-scroll)
 
 
 (define-key menu-bar-options-menu [view-mode]
-  '(menu-item "View Mode" view-mode :enable t))
+            '(menu-item "View Mode" view-mode :enable t))
 (define-key menu-bar-options-menu [fullscreen]
-  '(menu-item "Toggle fullscreen" toggle-frame-fullscreen :enable t))
+            '(menu-item "Toggle fullscreen" toggle-frame-fullscreen :enable t))
 
 (use-package desktop
   :custom
