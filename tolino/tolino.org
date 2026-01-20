@@ -1,0 +1,100 @@
+# tolino android 4.4 apps
+# https://github.com/topjohnwu/Magisk/releases/download/v22.1/Magisk-v22.1.apk
+# https://github.com/meefik/linuxdeploy/releases/download/2.5.1/linuxdeploy-2.5.1-257.apk
+# https://f-droid.org/repo/com.ghostsq.commander_396.apk
+# https://mirrors.tuna.tsinghua.edu.cn/fdroid/repo/org.pocketworkstation.pckeyboard_1041001.apk
+# https://f-droid.org/repo/tw.com.daxia.virtualsoftkeys_10.apk
+# https://mirrors.tuna.tsinghua.edu.cn/fdroid/repo/org.koreader.launcher.fdroid_114502.apk
+# https://f-droid.org/repo/com.gacode.relaunchx_200106000.apk
+# https://sourceforge.net/projects/android-ports-for-gnu-emacs/files/emacs-30.2-16-armeabi-v7a.apk/download
+# https://f-droid.org/repo/org.connectbot_10913000.apk
+# steps:
+
+
+* downgrade
+downgrade firmware version to tolino 15.3.2, at
+https://download.pageplace.de/ereader/15.3.2/OS44/update.zip
+* root the device
+flash boot partition with boot.img from
+https://allesebook.de/anleitung/tolino-page-2-shine-3-vision-5-root-adb-und-apps-installieren-anleitung-982951/
+
+run fastboot flash boot custom-boot.img
+* install apk with adb
+
+find -type f | xargs -I{} adb install {}
+
+* push linux, dict, emacs init to device
+https://github.com/DesktopECHO/linuxdeploy-images
+
+cp trixie32.tgz init.el fonts/ dict/ ./mnt/
+
+* reboot device, choose new launcher as default
+
+setup virtual softkeys: increase gesture height, set 1s autohide, set
+white/transparent background
+
+setup hacker's keyboard: lanugage, 5row, (key feedback settings)popup, autocorrect, theme
+
+linux deploy: settings, hell design, quit and restart program
+
+linux deploy: bottom right parameter button,
+destribution rootfs.tar,
+source path /sdcard/trixie32.tgz
+image size 2048
+password: test
+init, Enable
+init system, sysv
+mountpoint Enable, mount /sdcard to /sdcard
+
+quit this interface, open options menu, three dots upper right, tip
+install, grant root permission
+
+after deploy prompt is shown, tap start to boot the container.
+
+* use connectbot to connect linux
+connectbot, set color: upper-left three-dots, farben, sf: 18, HF: 16
+
+choose ssh protocol
+use android@localhost as address
+
+connect reader to wifi
+
+inside connectbot
+use sudo -i
+apt update
+apt install dictd
+
+install a good editor
+apt install mg
+
+* configure dictd
+nano /etc/default/dictd
+
+add the following args:
+DICTD_ARGS="--config /sdcard/dict/dictd.conf"
+
+mg /sdcard/dict/dictd.conf
+
+add dictd user to inet group
+# see linuxdeploy issue 13
+usermod -aG aid_inet dictd
+
+start service
+/etc/init.d/dictd start
+* configure emacs
+go to ghost commander, enable root zugriff under settings.
+
+go to /data/data/org.emacs/files , copy fonts, init.el and books into
+it.
+
+connect to wifi, then launch emacs, let emacs install packages
+* linuxdeploy must be stopped before connecting to computer
+* add swap
+https://android.stackexchange.com/questions/89028/creating-and-enabling-an-internal-storage-swap-partition-on-rooted-android-kitka
+
+use connectbot, and enter su mode
+
+dd if=/dev/zero of=/mnt/media_rw/sdcard1/swapfile bs=8192 count=65536
+mkswap /mnt/media_rw/sdcard1/swapfile
+swapon /mnt/media_rw/sdcard1/swapfile
+

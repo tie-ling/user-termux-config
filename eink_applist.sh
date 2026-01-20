@@ -6,7 +6,9 @@ set -xe
 #https://f-droid.org/repo/
 
 # mkdir 宇琛2026电子书软件包
+
 DL_LINKS="https://mirrors.tuna.tsinghua.edu.cn/fdroid/repo/org.koreader.launcher.fdroid_114502.apk
+https://f-droid.org/repo/tw.com.daxia.virtualsoftkeys_10.apk
 https://mirrors.tuna.tsinghua.edu.cn/fdroid/repo/com.ghostsq.commander_479.apk
 https://mirrors.tuna.tsinghua.edu.cn/fdroid/repo/com.activitymanager_555.apk
 https://mirrors.tuna.tsinghua.edu.cn/fdroid/repo/com.termux_1022.apk
@@ -15,7 +17,7 @@ https://mirrors.tuna.tsinghua.edu.cn/fdroid/repo/org.pocketworkstation.pckeyboar
 https://mirrors.tuna.tsinghua.edu.cn/fdroid/repo/com.adilhanney.saber_1290302.apk
 https://mirrors.tuna.tsinghua.edu.cn/fdroid/repo/org.fdroid.fdroid_1023051.apk
 https://mirrors.tuna.tsinghua.edu.cn/fdroid/repo/org.mozilla.fennec_fdroid_1460120.apk
-https://mirrors.tuna.tsinghua.edu.cn/fdroid/repo/app.olauncher_95.apk
+https://f-droid.org/repo/com.gacode.relaunchx_200106000.apk
 https://mirrors.tuna.tsinghua.edu.cn/fdroid/repo/org.fcitx.fcitx5.android_102.apk
 https://mirrors.tuna.tsinghua.edu.cn/fdroid/repo/juloo.keyboard2_50.apk
 https://mirrors.tuna.tsinghua.edu.cn/fdroid/repo/com.saha.batchuninstaller_13.apk
