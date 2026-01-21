@@ -1,100 +1,93 @@
-# tolino android 4.4 apps
-# https://github.com/topjohnwu/Magisk/releases/download/v22.1/Magisk-v22.1.apk
-# https://github.com/meefik/linuxdeploy/releases/download/2.5.1/linuxdeploy-2.5.1-257.apk
-# https://f-droid.org/repo/com.ghostsq.commander_396.apk
-# https://mirrors.tuna.tsinghua.edu.cn/fdroid/repo/org.pocketworkstation.pckeyboard_1041001.apk
-# https://f-droid.org/repo/tw.com.daxia.virtualsoftkeys_10.apk
-# https://mirrors.tuna.tsinghua.edu.cn/fdroid/repo/org.koreader.launcher.fdroid_114502.apk
-# https://f-droid.org/repo/com.gacode.relaunchx_200106000.apk
-# https://sourceforge.net/projects/android-ports-for-gnu-emacs/files/emacs-30.2-16-armeabi-v7a.apk/download
-# https://f-droid.org/repo/org.connectbot_10913000.apk
-# steps:
-
-
-* downgrade
-downgrade firmware version to tolino 15.3.2, at
+* use 15.3.2 firmware
 https://download.pageplace.de/ereader/15.3.2/OS44/update.zip
-* root the device
-flash boot partition with boot.img from
+
+mount /dev/sda /mnt
+cp 15-3-2update.zip /mnt/update.zip
+eject /dev/sda
+
+reboot device to commence update
+
+* enable adb debug the device
 https://allesebook.de/anleitung/tolino-page-2-shine-3-vision-5-root-adb-und-apps-installieren-anleitung-982951/
 
-run fastboot flash boot custom-boot.img
-* install apk with adb
+extract custom-boot.img
 
-find -type f | xargs -I{} adb install {}
+execute fastboot, wait for device
+fastboot flash boot.img
 
-* push linux, dict, emacs init to device
-https://github.com/DesktopECHO/linuxdeploy-images
+while connect to computer, power on by holding power button for 30 secs
 
-cp trixie32.tgz init.el fonts/ dict/ ./mnt/
+fastboot reboot
 
-* reboot device, choose new launcher as default
+* install only essential apps
+tolino android 4.4 apps, with exit button
 
-setup virtual softkeys: increase gesture height, set 1s autohide, set
-white/transparent background
+https://f-droid.org/repo/com.ghostsq.commander_396.apk
+https://f-droid.org/repo/org.kknickkk.spider_13.apk
+https://github.com/koreader/koreader/releases
+https://f-droid.org/repo/com.gacode.relaunchx_200106000.apk
+https://f-droid.org/repo/tw.com.daxia.virtualsoftkeys_10.apk
 
-setup hacker's keyboard: lanugage, 5row, (key feedback settings)popup, autocorrect, theme
+find -type f -name '*apk' | xargs -I{} adb install {}
 
-linux deploy: settings, hell design, quit and restart program
+* reboot, select new launcher as default
+adb shell reboot
 
-linux deploy: bottom right parameter button,
-destribution rootfs.tar,
-source path /sdcard/trixie32.tgz
-image size 2048
-password: test
-init, Enable
-init system, sysv
-mountpoint Enable, mount /sdcard to /sdcard
+* set up virtual soft keys.  transparent color
 
-quit this interface, open options menu, three dots upper right, tip
-install, grant root permission
+* launch koreader for a first time, to build dir structure
 
-after deploy prompt is shown, tap start to boot the container.
+* copy files
+alternative 1:
+mount /dev/sda /mnt
+eject /mnt
 
-* use connectbot to connect linux
-connectbot, set color: upper-left three-dots, farben, sf: 18, HF: 16
+alternative 2:
+adb push books /sdcard/Documents
+adb push dict/en /sdcard/koreader/data/dict
+adb push dict/de /sdcard/koreader/data/dict
+adb push fonts /sdcard/koreader
 
-choose ssh protocol
-use android@localhost as address
+* koreader config
+default font: libertinus serif
+screen, screen dpi: 240
+e-ink settings: never refresh
+disable embedded style by default, (set default by long press)
+device, device status alerts, battery level: 20%, 75%
 
-connect reader to wifi
+https://github.com/koreader/koreader/wiki/Android-tips-and-tricks#tolino
+Create file /koreader/settings/event_map.lua and put the following content inside it:
 
-inside connectbot
-use sudo -i
-apt update
-apt install dictd
+return {
+   [21] = "LPgBack",
+   [22] = "LPgFwd",
+}
 
-install a good editor
-apt install mg
+settings, status bar, progress bar: disable, status bar items: show
+all seleted items at once, auto refresh
 
-* configure dictd
-nano /etc/default/dictd
+* dicts
+https://www.reader-dict.com/
+only monolingual version is free
+https://www.reader-dict.com/download/de
+https://www.reader-dict.com/download/en
+https://www.reader-dict.com/file/en/dict-en-en-noetym.zip
+https://www.reader-dict.com/file/de/dict-de-de-noetym.zip
 
-add the following args:
-DICTD_ARGS="--config /sdcard/dict/dictd.conf"
+7zz x *.zip
+adb push  /sdcard/koreader/data/dict/
 
-mg /sdcard/dict/dictd.conf
+(for use on computer with dict)
+https://www.reader-dict.com/file/de/dictorg-de-de-noetym.zip
+https://www.reader-dict.com/file/en/dictorg-en-en-noetym.zip
 
-add dictd user to inet group
-# see linuxdeploy issue 13
-usermod -aG aid_inet dictd
+* font
+https://github.com/alerque/libertinus/releases
+https://github.com/notofonts/noto-cjk/tree/main/Serif#downloading-noto-serif-cjk
 
-start service
-/etc/init.d/dictd start
-* configure emacs
-go to ghost commander, enable root zugriff under settings.
+after restart koreader, in the top menu, font, select new font, long
+press to set default
 
-go to /data/data/org.emacs/files , copy fonts, init.el and books into
-it.
-
-connect to wifi, then launch emacs, let emacs install packages
-* linuxdeploy must be stopped before connecting to computer
-* add swap
-https://android.stackexchange.com/questions/89028/creating-and-enabling-an-internal-storage-swap-partition-on-rooted-android-kitka
-
-use connectbot, and enter su mode
-
-dd if=/dev/zero of=/mnt/media_rw/sdcard1/swapfile bs=8192 count=65536
-mkswap /mnt/media_rw/sdcard1/swapfile
-swapon /mnt/media_rw/sdcard1/swapfile
-
+* users manual
+https://koreader.rocks/user_guide/
+https://github.com/koreader/koreader/wiki
