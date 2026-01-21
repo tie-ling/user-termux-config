@@ -91,3 +91,8 @@ press to set default
 * users manual
 https://koreader.rocks/user_guide/
 https://github.com/koreader/koreader/wiki
+
+* book transfer
+copy book to my phone
+start a ftp server on my android phone
+use ftp client inside ghost commander
